@@ -10,11 +10,21 @@ type Config struct {
 }
 
 
-func GetConfig() Config {
-	return Config{
-		BadCondition: BadCondition,
-		Cities: Cities,
-		FieldsEnToRU: FieldsEnToRu,
-		Timeout: 5*time.Second,
+var cfg *Config
+
+func init() {
+	cfg = &Config{
+		BadCondition:  BadCondition,
+		Cities:        Cities,
+		FieldsEnToRU:  FieldsEnToRu,
+		Timeout:       5 * time.Second,
 	}
+}
+
+func GetConfig() *Config {
+	return cfg
+}
+
+func SetConfig(c *Config) {
+	cfg = c
 }

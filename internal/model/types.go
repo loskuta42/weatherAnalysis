@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 // type CityForecast struct {
 // 	City      string        `json:"city"`
@@ -61,10 +63,10 @@ type YandexWeatherAPIResponse struct {
 		FeelsLike    int     `json:"feels_like"`
 		Icon         string  `json:"icon"`
 		Condition    string  `json:"condition"`
-		Cloudness    float64 `json:"cloudness"`
+		Cloudness 	 float64 `json:"cloudness"`
 		PrecType     int     `json:"prec_type"`
 		PrecProb     int     `json:"prec_prob"`
-		PrecStrength int     `json:"prec_strength"`
+		PrecStrength float64     `json:"prec_strength"`
 		IsThunder    bool    `json:"is_thunder"`
 		WindSpeed    float64 `json:"wind_speed"`
 		WindDir      string  `json:"wind_dir"`
@@ -102,9 +104,9 @@ type YandexWeatherAPIResponse struct {
 			FeelsLike    int     `json:"feels_like"`
 			Icon         string  `json:"icon"`
 			Condition    string  `json:"condition"`
-			Cloudness    int     `json:"cloudness"`
+			Cloudness    float64     `json:"cloudness"`
 			PrecType     int     `json:"prec_type"`
-			PrecStrength int     `json:"prec_strength"`
+			PrecStrength float64     `json:"prec_strength"`
 			IsThunder    bool    `json:"is_thunder"`
 			WindDir      string  `json:"wind_dir"`
 			WindSpeed    float64 `json:"wind_speed"`
@@ -115,7 +117,7 @@ type YandexWeatherAPIResponse struct {
 			UvIndex      int     `json:"uv_index"`
 			SoilTemp     int     `json:"soil_temp"`
 			SoilMoisture float64 `json:"soil_moisture"`
-			PrecMm       int     `json:"prec_mm"`
+			PrecMm       float64     `json:"prec_mm"`
 			PrecPeriod   int     `json:"prec_period"`
 			PrecProb     int     `json:"prec_prob"`
 		} `json:"hours"`

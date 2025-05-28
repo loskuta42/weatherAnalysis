@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/loskuta42/weatherAnalysis/internal/config"
 	"github.com/loskuta42/weatherAnalysis/internal/fetcher"
@@ -20,19 +21,40 @@ func TestFetchWeatherData(t *testing.T) {
 	}))
 	defer mockServer.Close()
 
-	cfg := config.GetConfig()
-	cfg.Cities["MOSCOW"] = mockServer.URL
+	config.SetConfig(&config.Config{
+	Cities: map[string]string{
+		"MOSCOW": mockServer.URL,
+		"PARIS":  mockServer.URL,
+		"LONDON": mockServer.URL,
+		"NOVOSIBIRSK": mockServer.URL,
+		"CAIRO": mockServer.URL,
+	},
+	BadCondition: map[string]string{},
+	FieldsEnToRU: map[string]string{},
+	Timeout:      1 * time.Second,
+	})
 
 	f := &fetcher.Fetcher{
 		Client: mockServer.Client(),
 	}
+	cities := []string{"MOSCOW", "PARIS", "LONDON", "NOVOSIBIRSK", "CAIRO", "UNKNOWN_CITY"}
+	results := f.RunWeatherWorkerPool(cities, 3)
 
-	resp, err := f.FetchWeatherData("MOSCOW")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	var count int
+	for res := range results {
+		count++
+		if res.Err != nil {
+			if res.City == "UNKNOWN_CITY" {
+				continue
+			} else {
+				t.Errorf("unexpected error for city %s: %v", res.City, res.Err)
+			}
+		}
+		if res.Weather.Fact.Temp != 21 {
+			t.Errorf("unexpected temperature for city %s: got %d, want 25", res.City, res.Weather.Fact.Temp)
+		}
 	}
-
-	if resp.Fact.Temp != 21 {
-		t.Errorf("expected temp 21, got %d", resp.Fact.Temp)
+	if count != 6 {
+		t.Errorf("expected 6 results, got %d", count)
 	}
 }

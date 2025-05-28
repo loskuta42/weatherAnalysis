@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -15,9 +14,12 @@ func main() {
 	f := &fetcher.Fetcher{
 		Client: &http.Client{Timeout: cfg.Timeout},
 	}
-	result, err := f.FetchWeatherData("MOSCOW")
-	if err != nil {
-		log.Println(err)
+	results := f.RunWeatherWorkerPool([]string{"MOSCOW"}, 1)
+	for res := range results {
+		if res.Err != nil { 
+			log.Printf("unexpected error for city %s: %v", res.City, res.Err)
+			continue
+		}
+		log.Println(res.Weather)
 	}
-	fmt.Printf("%v", result)
 }
